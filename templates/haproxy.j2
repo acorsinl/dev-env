@@ -1,0 +1,34 @@
+global
+  maxconn {{item.maxconn}}
+  pidfile ~/tmp/haproxy-queue.pid
+
+defaults
+  log global
+  log 127.0.0.1 local0
+  log 127.0.0.1 local1 notice
+  mode http
+  timeout connect 300000
+  timeout client 300000
+  timeout server 300000
+  maxconn 2000
+  option redispatch
+  retries 3
+  option httpclose
+  option httplog
+  option forwardfor
+  option httpchk HEAD / HTTP/1.0
+
+frontend services-farm
+  bind *:8080
+  acl checkins path_beg /checkins
+  use_backend checkins_srv if checkins
+
+backend checkins_srv
+  reqrep ^([^\ ]*\ /)checkins[/]?(.*) \1\2
+  balance roundrobin
+  server checkins01 localhost:9000
+  #server checkins02 localhost:9001
+
+listen haproxyapp_admin:9100 127.0.0.1:9100
+  mode http
+  stats uri /
