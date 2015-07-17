@@ -1,5 +1,5 @@
 ---
   # Handler to handle microservices tier notifications
 
-  - name: restart haproxy
-    service: name=haproxy state=restarted
+- name: restart haproxy
+  service: name=haproxy state=restarted

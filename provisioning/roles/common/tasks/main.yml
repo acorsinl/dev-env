@@ -1,3 +1,10 @@
 ---
+- name: set timezone
+  template:
+    src=etc/timezone
+    dest=/etc/timezone
+  notify:
+    - update tzdata
+
 - name: update ubuntu to last version
   apt: upgrade=dist
