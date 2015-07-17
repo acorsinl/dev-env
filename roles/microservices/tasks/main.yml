@@ -1,0 +1,20 @@
+---
+# This role will install microservices dependencies
+
+- name: install Go
+  apt: name=golang state=present
+
+- name: install haproxy
+  apt: name=haproxy state=present
+
+- name: copy haproxy configuration file
+  template:
+    src=haproxy.cfg.j2
+    dest=/etc/haproxy/haproxy.cfg
+  notify:
+    - restart haproxy
+
+- name: install supervisor
+  apt: name=supervisor state=present
+
+# @todo: config de supervisor + su notify restart y config de cada app

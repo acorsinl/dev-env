@@ -1,0 +1,3 @@
+---
+- name: update ubuntu to last version
+  apt: upgrade=dist

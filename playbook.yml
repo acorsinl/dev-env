@@ -1,41 +1,29 @@
 ---
+# This playbook deploys the whole application stack in this site.
+
 - hosts: all
-  vars:
-    haproxy_vars:
-      - maxconn: "4096"
   sudo: yes
-  tasks:
-    - name: update system
-      apt: upgrade=dist
-    - name: install golang
-      apt: name=golang state=present
-    - name: install mongodb
-      apt: name=mongodb state=present
-    - name: install mysql
-      apt: name=mysql-server state=present
-    - name: install haproxy
-      apt: name=haproxy state=present
-    - name: install supervisor
-      apt: name=supervisor state=present
-    - name: create haproxy configuration directory
-      file:
-        path=/opt/etc
-        state=directory
-        owner=vagrant
-        group=vagrant
-        mode=0755
-    - name: copy haproxy configuration
-      template:
-        src=templates/haproxy.j2
-        dest=/opt/etc/haproxy.conf
-        owner=vagrant
-        group=vagrant
-        mode=0644
-      with_items: haproxy_vars
-      notify:
-        - restart haproxy
-  handlers:
-    - name: restart haproxy
-      service:
-        name=haproxy
-        state=restarted
+  roles:
+    - common
+
+#- name: configure and deploy the webservers and application code
+#  hosts: webservers
+#  remote_user: root
+
+#  roles:
+#    - web
+
+- hosts: mysqlservers
+  sudo: yes
+  roles:
+    - mysqlservers
+
+- hosts: mongoservers
+  sudo: yes
+  roles:
+    - mongoservers
+
+- hosts: microservices
+  sudo: yes
+  roles:
+    - microservices

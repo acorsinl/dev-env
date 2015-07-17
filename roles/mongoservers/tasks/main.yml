@@ -1,0 +1,5 @@
+---
+# This role will install mongoserver dependencies
+
+- name: install MongoDB
+  apt: name=mongodb state=present
