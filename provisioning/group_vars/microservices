@@ -4,3 +4,10 @@
 
 haproxy_user: haproxy
 haproxy_group: haproxy
+
+services:
+  questions:
+    user: questions
+    group: questions
+    port: 9000
+    path: /questions

@@ -3,3 +3,13 @@
 
 - name: restart haproxy
   service: name=haproxy state=restarted
+
+#- name: copy questions microservice
+#  copy:
+#    src=/Users/acorsinl/Documents/Workspace/Code/bin/questions
+#    dest=/opt/local/bin/questions
+#    owner=vagrant
+#    group=vagrant
+#    mode=0700
+#  notify:
+#   - restart questions

@@ -21,15 +21,18 @@ defaults
 
 frontend services-farm
   bind *:8080
-  acl checkins path_beg /checkins
-  use_backend checkins_srv if checkins
+  {% for key,value in services.items() %}
+  acl {{key}} path_beg {{value.path}}
+  use_backend {{key}}_srv if {{key}}
+  {% endfor %}
 
-backend checkins_srv
-  reqrep ^([^\ ]*\ /)checkins[/]?(.*) \1\2
+{% for key,value in services.items() %}
+backend {{key}}_srv
+  reqrep ^([^\ ]*\ /){{key}}[/]?(.*) \1\2
   balance roundrobin
-  server checkins01 localhost:9000
-  #server checkins02 localhost:9001
+  server {{key}} localhost:{{value.port}}
+{% endfor %}
 
-listen haproxyapp_admin:9100 127.0.0.1:9100
+listen haproxyapp_admin:9100 0.0.0.0:9100
   mode http
   stats uri /
