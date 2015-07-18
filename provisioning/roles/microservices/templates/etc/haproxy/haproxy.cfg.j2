@@ -21,16 +21,16 @@ defaults
 
 frontend services-farm
   bind *:8080
-  {% for key,value in services.items() %}
-  acl {{key}} path_beg {{value.path}}
-  use_backend {{key}}_srv if {{key}}
+  {% for service,config in services.items() %}
+  acl {{service}} path_beg {{config.path}}
+  use_backend {{service}}_srv if {{service}}
   {% endfor %}
 
-{% for key,value in services.items() %}
-backend {{key}}_srv
-  reqrep ^([^\ ]*\ /){{key}}[/]?(.*) \1\2
+{% for service,config in services.items() %}
+backend {{service}}_srv
+  reqrep ^([^\ ]*\ /){{service}}[/]?(.*) \1\2
   balance roundrobin
-  server {{key}} localhost:{{value.port}}
+  server {{service}} localhost:{{config.port}}
 {% endfor %}
 
 listen haproxyapp_admin:9100 0.0.0.0:9100
