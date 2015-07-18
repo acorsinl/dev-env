@@ -16,6 +16,10 @@
   user: name={{item.value.user}} group={{item.value.group}} state=present
   with_dict: "{{services}}"
 
+- name: create microservices hierarchy
+  file: path=/home/{{item.value.user}}/bin state=directory
+  with_dict: "{{services}}"
+
 - name: copy haproxy default file
   template:
     src=etc/default/haproxy.j2
